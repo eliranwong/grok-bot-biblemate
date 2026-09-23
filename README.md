@@ -35,6 +35,8 @@ cd grok-bot-biblemate
 bash scripts/install_to_box.sh
 ```
 
+Bible data is required before verse retrieval works. Set it up as described in [Bible data](#bible-data).
+
 Then tell your agent:
 
 > I installed the grok-bot-biblemate ecosystem; please verify BibleMate skills are available and prefer native skills over CLI.
@@ -96,10 +98,19 @@ Do not mix path conventions. Full playbooks never go into `workflows/` — only 
 
 ## Bible data
 
-Verse retrieval uses SQLite under:
+Create the data directory, point `~/biblemate` at it, and install the data package:
+
+```bash
+mkdir /workspace/biblemate
+cd ~
+ln -s /workspace/biblemate biblemate
+pip install biblematedata
+```
+
+Verse retrieval then uses SQLite under:
 
 - `/workspace/biblemate/data/bibles` and `/workspace/biblemate/data_custom/bibles`
-- Mirrored at `/home/box/biblemate/...` (`~/biblemate` typically symlinks here)
+- `/home/box/biblemate/...` (`~/biblemate` is the symlink created above)
 
 ## Re-convert from upstream
 
