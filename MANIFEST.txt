@@ -1,0 +1,146 @@
+MANIFEST — grok-bot-biblemate
+Native Grok Bot BibleMate ecosystem (ported from biblemate-agentic-workspace/.grok).
+
+skills/ SKILL.md packages: 128
+catalog/ SKILL.md loaders: 128
+helper .py files under skills/: 36
+docs/: 1 — setup.md
+scripts/: convert_to_grok_bot.py, install_to_box.sh, register_skills.md
+report dirs: biblemate/, devotions/, sermons/, studies/
+
+Special (not from upstream .grok):
+  biblemate-studies-cli, gbm-ecosystem-sync, biblemate-ecosystem-sync (alias)
+
+Install targets:
+  playbooks → /home/box/agent-data/biblemate-native-skills/
+  catalog   → /home/box/agent-data/workflows/ (non-destructive)
+
+Skill ids:
+  - 1Chr
+  - 1Cor
+  - 1John
+  - 1Kgs
+  - 1Pet
+  - 1Sam
+  - 1Thess
+  - 1Tim
+  - 2Chr
+  - 2Cor
+  - 2John
+  - 2Kgs
+  - 2Pet
+  - 2Sam
+  - 2Thess
+  - 2Tim
+  - 3John
+  - Acts
+  - Amos
+  - Col
+  - Dan
+  - Deut
+  - Eccl
+  - Eph
+  - Esth
+  - Exod
+  - Ezek
+  - Ezra
+  - Gal
+  - Gen
+  - Hab
+  - Hag
+  - Heb
+  - Hos
+  - Isa
+  - Jas
+  - Jer
+  - Job
+  - Joel
+  - John
+  - Jonah
+  - Josh
+  - Jude
+  - Judg
+  - Lam
+  - Lev
+  - Luke
+  - Mal
+  - Mark
+  - Matt
+  - Mic
+  - Nah
+  - Neh
+  - Num
+  - Obad
+  - Phil
+  - Phlm
+  - Prov
+  - Ps
+  - Rev
+  - Rom
+  - Ruth
+  - Song
+  - Titus
+  - Zech
+  - Zeph
+  - application
+  - bible
+  - biblemate
+  - biblemate-ecosystem-sync
+  - biblemate-studies-cli
+  - biblemate-super
+  - book-analysis
+  - canon
+  - chapter-summary
+  - characters
+  - chronology
+  - commentary
+  - daily-read
+  - data
+  - devotion
+  - dictionaries
+  - docx
+  - encyclopedias
+  - flow
+  - gbm-ecosystem-sync
+  - image
+  - insights
+  - interlinear
+  - keywords
+  - lexicon
+  - locations
+  - md
+  - meaning
+  - morphology
+  - names
+  - nt-context
+  - nt-highlights
+  - nt-meaning
+  - nt-themes
+  - online
+  - original
+  - ot-context
+  - ot-highlights
+  - ot-highligths
+  - ot-meaning
+  - ot-themes
+  - outline
+  - parallels
+  - perspective
+  - prayer
+  - promises
+  - questions
+  - quotes
+  - search
+  - sermon
+  - short-prayer
+  - summary
+  - sync
+  - testimony
+  - themes
+  - theology
+  - topics
+  - translate-greek
+  - translate-hebrew
+  - update
+  - xrefs
+  - zip
