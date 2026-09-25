@@ -103,7 +103,7 @@ Total: 129
 - [Philippians](Phil/SKILL.md) — `Phil` (skill)
 - [Philemon](Phlm/SKILL.md) — `Phlm` (skill)
 - [Prayer](prayer/SKILL.md) — `prayer` (skill)
-- [Promise Prayer](promise-prayer/SKILL.md) — `promise-prayer` (skill)
+- [Promise Prayer](promise-prayer/SKILL.md) — `promise-prayer` (skill; world news + same-day news log + remarks)
 - [Promises](promises/SKILL.md) — `promises` (skill)
 - [Proverbs](Prov/SKILL.md) — `Prov` (skill)
 - [Psalms](Ps/SKILL.md) — `Ps` (skill)

@@ -1,6 +1,6 @@
 # Promise Prayer (`/promise-prayer`)
 
-Bilingual first-person pastoral prayers grounded in a Bible promise — for Eliran (pastor) to pray aloud for self, family, church, and the world.
+Bilingual first-person pastoral prayers grounded in a Bible promise — for Eliran (pastor) to pray aloud for self, family, church, and the world, with one real news item for the day woven into the world section.
 
 ## Files in this repo
 
@@ -17,40 +17,42 @@ Bilingual first-person pastoral prayers grounded in a Bible promise — for Elir
 | `/home/box/agent-data/biblemate-native-skills/promise-prayer/SKILL.md` | Installed playbook |
 | Enrolled skill id `promise-prayer` | `/` autocomplete via `update_state` only |
 | `/workspace/biblemate_studies/prayers/promise-verse-log.txt` | 30-day verse uniqueness log |
+| `/workspace/biblemate_studies/prayers/promise-news-log.txt` | Same-day news uniqueness log |
 | `/workspace/biblemate_studies/prayers/` | Optional dated prayer archives |
-| `/workspace/biblemate_studies/prayers/PROMISE_PRAYER_SKILL.md` | Working archive copy (safe to edit) |
 
 ## Scheduled routine
 
 - **Name:** Promise prayers (every 2h)
 - **Folder id:** `promise-prayers-every-2h`
 - **Cron (Europe/London):** `0 9,11,13,15,17,19,21,23 * * *`
-- **Times:** 9:00, 11:00, 13:00, 15:00, 17:00, 19:00, 21:00, 23:00 daily (including weekends)
 
-Each run should follow the playbook, deliver the prayer in chat, and update the verse log.
+## World news (required)
+
+1. Look up a real current news item (`WebSearch` / `WebFetch`) suitable for pastoral intercession.
+2. Integrate it into the **world** section of both English and Cantonese prayers (people, mercy, peace, wisdom — not a partisan rant).
+3. After both Amens, add **Remarks / Notes** (備註) briefly explaining the news (2–4 sentences) with source when available. Remarks are for the reader, not prayed to God.
+4. **Same-day rule:** do not reuse the same `news-key` / story already in `promise-news-log.txt` for today’s Europe/London date. Later runs the same day need a different story.
+
+### News log format
+```
+YYYY-MM-DD\tHH:MM\tnews-key\tshort-headline\tsource-url-optional
+```
 
 ## Verse log
 
+- Avoid repeating the same promise reference within 30 days.
 - Format: `YYYY-MM-DD\tHH:MM\treference(s)\tnote`
-- On every run (manual or scheduled): prune entries older than 30 days, choose a promise **not** in the log, append the new reference.
-- Do not reuse the same normalized reference within 30 days (e.g. `Isaiah 41:10`, `Philippians 4:6-7`).
 
 ## Defaults
 
-- CSB (English) + CUV (Chinese) for the quoted promise
-- Spoken Cantonese for the prayer body
-- Warm pastoral tone; first person (“I / my”)
-- Never invent Scripture — fetch via `/bible` / `bible_retriever.py` when possible
+- CSB + CUV for the quoted promise; spoken Cantonese for the prayer body
+- Warm pastoral first-person tone
+- Never invent Scripture or invent news
 
 ## Register / refresh
 
-```text
-update_state → target skill, action write, id promise-prayer
-```
-
-**Do not** Shell-copy or overwrite `/home/box/agent-data/workflows/*/SKILL.md` for this skill — that path has caused brain-docs catalog “without a size” errors. Prefer repo edit + `update_state`. After `install_to_box.sh`, still call `update_state` for autocomplete.
+`update_state` → skill write, id `promise-prayer`. Do **not** Shell-overwrite `workflows/*/SKILL.md`.
 
 ## Related
 
-- Older `/prayer` playbook (different skill) remains in this pack for general prayer study content.
 - Trading skills must never be deleted or overwritten by BibleMate work.
