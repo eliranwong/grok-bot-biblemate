@@ -32,11 +32,74 @@ This skill was ported from the BibleMate Grok Build `.grok` playbook for **nativ
 - When the playbook mentions sibling skills, read the full playbook under `/home/box/agent-data/biblemate-native-skills/<id>/SKILL.md` (catalog loaders under `/home/box/agent-data/workflows/` point there after install).
 - Helper scripts live beside the playbook after install, e.g. `python3 /home/box/agent-data/biblemate-native-skills/bible/bible_retriever.py "<query>"`.
 
+
+## Native multi-skill orchestration (required)
+
+**This orchestrator never routes a study to a single leaf skill.** Every run plans and executes **multiple** playbooks across phases (retrieval → analysis → theology → application → overview → final response). A one-skill shortcut is a failure.
+
+### Playbook root (unenrolled leaves OK)
+```text
+PLAYBOOK_ROOT = /home/box/agent-data/biblemate-native-skills
+ARTIFACT_ROOT = /workspace/grok-bot-biblemate
+STUDIES_DIR   = /workspace/grok-bot-biblemate/biblemate
+PERSONAS      = /workspace/biblemate-agentic-workspace/.grok/agents.md
+```
+
+For every leaf id `<id>` named in the plan:
+1. `Read` `PLAYBOOK_ROOT/<id>/SKILL.md`
+2. Execute that recipe with Grok Bot tools (never invent Scripture; use `bible` / `bible_retriever.py`)
+3. Save the step under the study folder, then continue to the **next** leaves in the plan
+
+Leaves do **not** need to be enrolled in `~/agent-data/workflows/`. Only this orchestrator (and optional staples like `/promise-prayer`) need enrollment.
+
+### Skill discovery (do not use `.grok/skills`)
+Do **not** rely on `--list-skills` if it still points at missing `.grok/skills`. Instead:
+- Prefer the routing tables below, **or**
+- `ls PLAYBOOK_ROOT` / read `PLAYBOOK_ROOT/README.md` when present
+- Book leaves use folder ids like `John`, `Rom`, `Gen` (prefer `Luke` over legacy aliases `gospel-of-luke` / `third-gospel`)
+
+### Intent → study type (then many leaves)
+| User intent | Study type |
+|-------------|------------|
+| Passage / verse / exegesis | `passage` |
+| Book overview / introduction | `book` |
+| Topic / “what does the Bible say about…” | `topical` |
+| Sermon or devotion manuscript | `sermon_devotion` |
+
+### Phase → multiple leaf ids (always several per phase)
+
+**Phase 1 (parallel OK):** `bible` (required, 2+ versions) + (`original` **or** `interlinear`) + preferably `morphology`, `xrefs`, `commentary`, and as needed `lexicon`, `dictionaries`, `encyclopedias`, book abbrev leaf.
+
+**Phase 2:** `keywords`, `outline`, `flow`, plus `ot-context`|`nt-context`, `ot-highlights`|`nt-highlights` (prefer spelling `ot-highlights`, not typo folder `ot-highligths`), and as needed `characters`, `locations`, `chronology`, `names`, `parallels`.
+
+**Phase 3:** `themes` or `ot-themes`/`nt-themes`, `theology`, `meaning` or `ot-meaning`/`nt-meaning`, `insights`, `canon`; topical adds `topics`.
+
+**Phase 4:** `application` + (`devotion` **and/or** `sermon` per request) + `prayer`|`short-prayer` + as needed `questions`, `promises`, `testimony`, `quotes`. If the user wants the bilingual promise+news habit, prefer enrolled `/promise-prayer` instead of only `promises`.
+
+**Phases 5–6:** overview + iterative final manuscript (orchestrator writing loop — still grounded in **all** prior leaf outputs).
+
+**Phase 7:** `sync` and/or enrolled `/gbm-ecosystem-sync` for the Bot pack only.
+
+### Minimum multi-skill coverage (hard gate)
+- **Passage:** `bible` + (`original`|`interlinear`) + `keywords` + `commentary` + `xrefs` + `themes` + `insights` (and recommended language/context/application leaves)
+- **Book:** `bible` + `book-analysis` + `outline` + `canon` + `themes`
+- **Topical:** `topics` + `quotes` + `search` + `themes` + `bible`
+- **Sermon/devotion:** `bible` + `commentary` + `keywords` + (`sermon`|`devotion`) + `application` + `prayer`
+
+Plan validation in helpers may still list exact ids `original` / `sermon`; when using allowed alternatives, note the substitution in the plan and treat coverage as satisfied.
+
+### Invocation protocol for each leaf
+```text
+Read PLAYBOOK_ROOT/<id>/SKILL.md → run its steps → --save-step (via temp file) → next leaf
+```
+Use `Task`/executor for heavy parallel Phase 1 retrieval. Pass prior outputs forward; never run Phase 4 without Phases 1–3 context.
+
+
 ---
 # BibleMate Orchestration Skill
 
 ## Overview
-This skill dynamically orchestrates complex, multi-step Bible study requests. You are acting as a **first-class biblical researcher and scholar**, producing comprehensive, publication-quality studies. A shallow or stub output is a failure.
+This skill dynamically orchestrates complex, multi-step Bible study requests by composing **many** leaf skills (never a single leaf). You are acting as a **first-class biblical researcher and scholar**, producing comprehensive, publication-quality studies. A shallow or stub output is a failure.
 
 This skill discovers available skills at runtime, refines the study request, creates a timestamped study folder, generates a Master Study Plan, executes the steps (saving outputs to individual files), performs quality control audits at every stage, produces a pre-final overview, and then runs an iterative Draft→Integrate→Audit→Revise writing loop to produce a comprehensive, standalone final response that directly answers the user's original request. Changes are synced to a remote repository if configured.
 
@@ -71,7 +134,7 @@ Execute these phases in order. Each phase has mandatory quality gates.
 
 ### Phase 0: Initialization & Planning
 
-1. **Discover Skills**: Run `--list-skills` to get the current skill inventory. Read each relevant skill's SKILL.md to understand its parameters and output format.
+1. **Discover Skills**: Discover leaves via `PLAYBOOK_ROOT` (see Native multi-skill orchestration). Read each planned leaf's `SKILL.md` to understand its parameters and output format.
 2. **Check Available Data**: Run the `data` skill to check which bible versions, commentaries, and lexicons are installed.
 3. **Refine the User Request**: Apply prompt engineering to transform the raw user request into a clear, comprehensive study brief:
    - Identify the core topic, passage(s), or question
@@ -458,12 +521,12 @@ Each phase builds on the previous. Explicitly pass relevant context forward:
 
 Folded from the Grok Build command `/biblemate` — treat “user arguments after the slash command” as the input the user provided after the slash.
 
-Adopt the **Biblical Content Interpreter** persona from `/workspace/biblemate-agentic-workspace/.grok/agents.md`.
+Adopt the **Biblical Content Interpreter** persona from `/workspace/biblemate-agentic-workspace/.grok/agents.md` (same as `PERSONAS`).
 
 Use the **biblemate** skill to orchestrate and execute the study. Read the full SKILL.md file at `/home/box/agent-data/biblemate-native-skills/biblemate/SKILL.md` before beginning — it contains the complete workflow phases, skill taxonomy, minimum coverage requirements, quality gates, persona rotation guidance, and the iterative writing process for the final response.
 
 Before beginning the study:
-1. Run the orchestrator with `--list-skills` to discover all currently available skills.
+1. Discover leaves by listing `PLAYBOOK_ROOT` (`/home/box/agent-data/biblemate-native-skills`); do not depend on `.grok/skills`.
 2. Read each relevant skill's SKILL.md to understand its parameters and output format.
 3. Run the `data` skill to check which bible versions, commentaries, and lexicons are available locally.
 4. **Read Request File (If Applicable)**: If the User Request below specifies a file path (e.g. `biblemate/my_request.txt`), use the `Read` tool to read the contents of that file and use those contents as the actual raw user request for all subsequent planning, refinement, and execution.

@@ -1,16 +1,17 @@
 ---
 name: BibleMate
 description: >-
-  Use when the user runs /biblemate or requests this BibleMate workflow (native Grok Bot port).
+  Use when the user runs /biblemate or asks for a full BibleMate study (passage,
+  book, topical, or sermon/devotion pipeline). Orchestrates many unenrolled leaf
+  playbooks under biblemate-native-skills across fixed study phases — not a
+  single skill.
 ---
 # BibleMate
 
-Native Grok Bot port of the BibleMate playbook `biblemate`.
+Native Grok Bot entry for `biblemate`.
 
 ## Steps
-1. Read the full playbook at `/home/box/agent-data/biblemate-native-skills/biblemate/SKILL.md` with `Read`.
-2. Execute that methodology with Grok Bot tools (`Read`, `Shell`, `WebSearch`, `WebFetch`, `Task`/executor as needed).
-3. Do **not** call `grok`, `claude`, or `agy` for this skill.
-4. Write the full report under `/workspace/grok-bot-biblemate/` in the folders the playbook specifies.
-5. When finished, `SendToUser` a short digest **and** a chat copy of the report (paste or attach) plus concrete paths.
-
+1. Read `/home/box/agent-data/biblemate-native-skills/biblemate/SKILL.md`.
+2. Orchestrate **multiple** leaf playbooks (never one skill). Use Grok Bot tools only.
+3. Do **not** call `grok`, `claude`, or `agy`.
+4. Deliver digest + final report; artifacts under `/workspace/grok-bot-biblemate/biblemate/`.

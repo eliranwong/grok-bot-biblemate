@@ -287,9 +287,40 @@ FINAL_REPORT_TEMPLATES = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+def get_playbook_root():
+    """Native Grok Bot playbooks (unenrolled leaves live here)."""
+    env = os.environ.get("BIBLEMATE_PLAYBOOK_ROOT")
+    if env and os.path.isdir(env):
+        return env
+    native = "/home/box/agent-data/biblemate-native-skills"
+    if os.path.isdir(native):
+        return native
+    # Legacy Grok Build layout beside this script: <root>/.grok/skills/...
+    legacy = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if os.path.basename(legacy) == "skills" and os.path.isdir(legacy):
+        return legacy
+    return native
+
+
+def get_artifact_root():
+    env = os.environ.get("BIBLEMATE_ARTIFACT_ROOT")
+    if env and os.path.isdir(env):
+        return env
+    artifact = "/workspace/grok-bot-biblemate"
+    if os.path.isdir(artifact):
+        return artifact
+    # Fall back near playbooks
+    return get_workspace_root()
+
+
 def get_workspace_root():
-    # This script is at: <root>/.grok/skills/biblemate/biblemate_orchestrator.py
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+    """Study + git root for Grok Bot (artifact repo), with legacy fallbacks."""
+    return get_artifact_root()
+
+
+def get_studies_dir():
+    return os.path.join(get_artifact_root(), "biblemate")
+
 
 
 def _load_if_file(val):
@@ -327,8 +358,7 @@ def _parse_plan_skills(plan_text):
 # ---------------------------------------------------------------------------
 
 def discover_skills():
-    workspace_root = get_workspace_root()
-    skills_dir = os.path.join(workspace_root, ".grok", "skills")
+    skills_dir = get_playbook_root()
     if not os.path.exists(skills_dir):
         print(f"Error: Skills directory not found at {skills_dir}", file=sys.stderr)
         return []
@@ -1021,21 +1051,21 @@ def git_sync():
     try:
         # Check if remote origin is set
         res = subprocess.run(["git", "config", "--get", "remote.origin.url"], 
-                             cwd=workspace_root, capture_output=True, text=True)
+                             cwd=get_artifact_root(), capture_output=True, text=True)
         if not res.stdout.strip():
             print("Note: No git remote origin configured. Skipping sync.")
             return
             
         print("Staging changes...")
-        subprocess.run(["git", "add", "."], cwd=workspace_root, check=True)
+        subprocess.run(["git", "add", "."], cwd=get_artifact_root(), check=True)
         
         print("Committing changes...")
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         subprocess.run(["git", "commit", "-m", f"Sync BibleMate study results ({timestamp})"], 
-                       cwd=workspace_root, check=True)
+                       cwd=get_artifact_root(), check=True)
         
         print("Pushing to remote...")
-        subprocess.run(["git", "push"], cwd=workspace_root, check=True)
+        subprocess.run(["git", "push"], cwd=get_artifact_root(), check=True)
         print("SUCCESS_GIT_SYNC")
     except subprocess.CalledProcessError as e:
         print(f"Git command failed: {e}", file=sys.stderr)

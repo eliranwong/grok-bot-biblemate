@@ -1,16 +1,16 @@
 ---
 name: BibleMate Super
 description: >-
-  Use when the user runs /biblemate-super or requests this BibleMate workflow (native Grok Bot port).
+  Use when the user runs /biblemate-super or asks for a custom multi-phase
+  BibleMate study with dynamic planning and phase audits. Orchestrates many
+  unenrolled leaf playbooks — not a single skill.
 ---
 # BibleMate Super
 
-Native Grok Bot port of the BibleMate playbook `biblemate-super`.
+Native Grok Bot entry for `biblemate-super`.
 
 ## Steps
-1. Read the full playbook at `/home/box/agent-data/biblemate-native-skills/biblemate-super/SKILL.md` with `Read`.
-2. Execute that methodology with Grok Bot tools (`Read`, `Shell`, `WebSearch`, `WebFetch`, `Task`/executor as needed).
-3. Do **not** call `grok`, `claude`, or `agy` for this skill.
-4. Write the full report under `/workspace/grok-bot-biblemate/` in the folders the playbook specifies.
-5. When finished, `SendToUser` a short digest **and** a chat copy of the report (paste or attach) plus concrete paths.
-
+1. Read `/home/box/agent-data/biblemate-native-skills/biblemate-super/SKILL.md`.
+2. Orchestrate **multiple** leaf playbooks across audited custom phases.
+3. Do **not** call `grok`, `claude`, or `agy`.
+4. Study folders use `super_` prefix under `/workspace/grok-bot-biblemate/biblemate/`.

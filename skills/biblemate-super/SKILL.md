@@ -32,11 +32,57 @@ This skill was ported from the BibleMate Grok Build `.grok` playbook for **nativ
 - When the playbook mentions sibling skills, read the full playbook under `/home/box/agent-data/biblemate-native-skills/<id>/SKILL.md` (catalog loaders under `/home/box/agent-data/workflows/` point there after install).
 - Helper scripts live beside the playbook after install, e.g. `python3 /home/box/agent-data/biblemate-native-skills/bible/bible_retriever.py "<query>"`.
 
+
+## Native multi-skill orchestration (required)
+
+**`biblemate-super` always orchestrates multiple skills across custom phases.** It is not a router to one leaf. Every study: discover → plan many steps → execute each leaf playbook → audit → add more leaves if gaps remain → overview → final response.
+
+### Playbook root (unenrolled leaves OK)
+```text
+PLAYBOOK_ROOT = /home/box/agent-data/biblemate-native-skills
+ARTIFACT_ROOT = /workspace/grok-bot-biblemate
+STUDIES_DIR   = /workspace/grok-bot-biblemate/biblemate
+PERSONAS      = /workspace/biblemate-agentic-workspace/.grok/agents.md
+```
+
+For every planned step skill `<id>`:
+1. `Read` `PLAYBOOK_ROOT/<id>/SKILL.md`
+2. Adopt the assigned persona from `PERSONAS`
+3. Execute; save with `--save-step`; feed outputs into later steps
+
+Leaves need **not** be enrolled in `workflows/`.
+
+### Skill discovery (do not use `.grok/skills`)
+Ignore broken `--list-skills` paths that look under `.grok/skills`. Use `PLAYBOOK_ROOT` listing + the goal→leaves table below. Prefer book folder `Luke` over `gospel-of-luke` / `third-gospel`.
+
+### Goal → multiple leaf ids (pick several per phase goal)
+
+| Phase goal | Leaf ids to combine (examples) |
+|------------|--------------------------------|
+| Establish text | `bible`, `data`, optionally `search` |
+| Original languages | `original`, `interlinear`, `morphology`, `lexicon`, `translate-greek`, `translate-hebrew` |
+| Published voices | `commentary`, `dictionaries`, `encyclopedias`, `online` |
+| Structure & argument | `outline`, `flow`, `keywords`, `insights` |
+| Setting | `ot-context`\|`nt-context`, `locations`, `chronology`, `characters`, `names` |
+| Doctrine | `themes`\|`ot-themes`\|`nt-themes`, `theology`, `meaning`, `canon`, `topics` |
+| Pastoral deliverable | `application`, `devotion`, `sermon`, `prayer`, `questions`, `testimony`, `promises` |
+| Book-scoped | book abbrev + `book-analysis`, `chapter-summary` |
+| Sync | `sync` / enrolled GBM sync |
+
+Dynamic validation must still show **at least**: one `bible` retrieval step; one language/textual analysis leaf; one theological leaf; one application/devotion/prayer/sermon leaf — usually **many more**.
+
+### When to use super vs standard `biblemate`
+Use **this** skill for custom phase design, contested/deep research, multi-book synthesis, or explicit audit-until-solid. For ordinary passage/book/topical/sermon pipelines, prefer enrolled `/biblemate` (also multi-skill).
+
+### Invocation protocol
+Same as standard: Read leaf playbook → execute → save → audit phase → possibly add more leaves → never advance on unmet goals.
+
+
 ---
 # BibleMate-Super Orchestration Skill
 
 ## Overview
-This skill dynamically orchestrates custom, multi-step Bible studies. Unlike standard `biblemate` which uses a fixed 6-phase framework with rigid persona assignments, `biblemate-super` conducts a detailed initial assessment of the user request, generates a dynamic multi-phase study plan tailored specifically to the request, assigns the most appropriate personas to each step, sets clear goals for each phase, and performs rigorous phase audits. If audit goals are not fully satisfied, the auditor persona dynamically updates the plan with follow-up steps and executes them before moving to the next phase.
+This skill dynamically orchestrates custom, multi-step Bible studies by composing **many** leaf skills across audited phases (never a single leaf). Unlike standard `biblemate` which uses a fixed 6-phase framework with rigid persona assignments, `biblemate-super` conducts a detailed initial assessment of the user request, generates a dynamic multi-phase study plan tailored specifically to the request, assigns the most appropriate personas to each step, sets clear goals for each phase, and performs rigorous phase audits. If audit goals are not fully satisfied, the auditor persona dynamically updates the plan with follow-up steps and executes them before moving to the next phase.
 
 You are acting as the **Study Plan & Phase Quality Auditor** at planning and checkpoint stages, and rotating to the most specialized personas for each individual step. A shallow or stub output is a failure.
 
@@ -197,12 +243,12 @@ Select the best fit for each step task:
 
 Folded from the Grok Build command `/biblemate-super` — treat “user arguments after the slash command” as the input the user provided after the slash.
 
-Adopt the **Study Plan & Phase Quality Auditor** persona from `/workspace/biblemate-agentic-workspace/.grok/agents.md`.
+Adopt the **Study Plan & Phase Quality Auditor** persona from `/workspace/biblemate-agentic-workspace/.grok/agents.md` (same as `PERSONAS`).
 
 Use the **biblemate-super** skill to orchestrate and execute the study. Read the full SKILL.md file at `/home/box/agent-data/biblemate-native-skills/biblemate-super/SKILL.md` before beginning — it contains the dynamic workflow phases, persona rotation guide, dynamic validation rules, quality gates, phase audits, and the iterative writing process for the final response.
 
 Before beginning the study:
-1. Run the orchestrator script `/home/box/agent-data/biblemate-native-skills/biblemate-super/biblemate_super_orchestrator.py` with `--list-skills` to discover all currently available skills.
+1. Discover leaves by listing `PLAYBOOK_ROOT`; use the super orchestrator script for study folder lifecycle only.
 2. Read each relevant skill's SKILL.md to understand its parameters and output format.
 3. Run the `data` skill to check which bible versions, commentaries, and lexicons are available locally.
 4. **Read Request File (If Applicable)**: If the User Request below specifies a file path (e.g. `biblemate/my_request.txt`), use the `Read` tool to read the contents of that file and use those contents as the actual raw user request for all subsequent planning, refinement, and execution.
