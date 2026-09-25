@@ -30,12 +30,12 @@ Bilingual first-person pastoral prayers grounded in a Bible promise — for Elir
 
 1. Look up a real current news item (`WebSearch` / `WebFetch`) suitable for pastoral intercession.
 2. Integrate it into the **world** section of both English and Cantonese prayers (people, mercy, peace, wisdom — not a partisan rant).
-3. After both Amens, add **Remarks / Notes** (備註) briefly explaining the news (2–4 sentences) with source when available. Remarks are for the reader, not prayed to God.
+3. After both Amens, add **Remarks / Notes** (備註) briefly explaining the news (2–4 sentences) **and always include a clickable source URL**. Never omit the link. Remarks are for the reader, not prayed to God.
 4. **Same-day rule:** do not reuse the same `news-key` / story already in `promise-news-log.txt` for today’s Europe/London date. Later runs the same day need a different story.
 
-### News log format
+### News log format (URL required)
 ```
-YYYY-MM-DD\tHH:MM\tnews-key\tshort-headline\tsource-url-optional
+YYYY-MM-DD\tHH:MM\tnews-key\tshort-headline\tsource-url
 ```
 
 ## Verse log
