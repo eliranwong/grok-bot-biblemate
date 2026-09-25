@@ -50,3 +50,12 @@ See [scripts/register_skills.md](../scripts/register_skills.md) for the agent ch
 ## 5. Optional CLI fallback
 
 If native path is insufficient, `biblemate-studies-cli` can run `grok --always-approve -p "…"` against `/workspace/biblemate-agentic-workspace` or `/workspace/biblemate_studies`.
+
+## 6. Promise Prayer (optional but recommended)
+
+See **[promise-prayer.md](promise-prayer.md)**.
+
+1. Ensure playbook is installed under `biblemate-native-skills/promise-prayer/` (from `skills/promise-prayer/`).
+2. Register with `update_state` (id `promise-prayer`) — do not Shell-overwrite `workflows/*/SKILL.md`.
+3. Create or confirm the verse log at `/workspace/biblemate_studies/prayers/promise-verse-log.txt`.
+4. Optional: create the every-2-hour routine (`promise-prayers-every-2h`) as documented in `promise-prayer.md`.

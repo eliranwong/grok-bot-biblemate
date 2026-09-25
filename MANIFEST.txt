@@ -1,10 +1,10 @@
 MANIFEST — grok-bot-biblemate
 Native Grok Bot BibleMate ecosystem (ported from biblemate-agentic-workspace/.grok).
 
-skills/ SKILL.md packages: 128
-catalog/ SKILL.md loaders: 128
+skills/ SKILL.md packages: 129
+catalog/ SKILL.md loaders: 129
 helper .py files under skills/: 36
-docs/: 1 — setup.md
+docs/: 2 — setup.md, promise-prayer.md
 scripts/: convert_to_grok_bot.py, install_to_box.sh, register_skills.md
 report dirs: biblemate/, devotions/, sermons/, studies/
 
@@ -127,6 +127,7 @@ Skill ids:
   - parallels
   - perspective
   - prayer
+  - promise-prayer
   - promises
   - questions
   - quotes

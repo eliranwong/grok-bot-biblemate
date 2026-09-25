@@ -21,7 +21,7 @@ Native Bible study skills and playbooks for **Grok Bot** computers — verse ret
 | `skills/` | Full playbook packages (source of truth). Install → `/home/box/agent-data/biblemate-native-skills/` |
 | `catalog/` | Thin slash-command loaders. Install → `/home/box/agent-data/workflows/` (non-destructive; trading left alone) |
 | `scripts/` | `install_to_box.sh`, `convert_to_grok_bot.py`, `register_skills.md` |
-| `docs/` | Setup guide |
+| `docs/` | Setup guide (`setup.md`, `promise-prayer.md`) |
 | Report folders | `biblemate/`, `devotions/`, `sermons/`, `studies/` — **full reports saved here and syncable to GitHub** |
 
 ## Quick start
@@ -60,6 +60,7 @@ In Grok Bot chat, the agent also sends a **copy** of the report (inline or attac
 
 - `/bible [VERSION…] REF` — retrieve exact verses from local SQLite (never invent text)
 - `/devotion [passage]` — pastoral devotion + prayer
+- `/promise-prayer` — first-person EN+粵語 prayer from a Bible promise (self/family/church/world; 30-day verse log); see [`docs/promise-prayer.md`](docs/promise-prayer.md)
 - `/sermon [passage]` — homiletical outline and content
 - `/biblemate [request]` — multi-step orchestrated study
 - `/biblemate-super [request]` — enhanced orchestration

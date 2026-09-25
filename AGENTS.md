@@ -6,6 +6,8 @@ This repository is an AI-driven Bible study ecosystem for **Grok Bot** (native s
 
 ## Prefer native skills
 
+For `/promise-prayer` and the every-2-hour promise routine, follow [`docs/promise-prayer.md`](docs/promise-prayer.md) and keep `/workspace/biblemate_studies/prayers/promise-verse-log.txt` unique for 30 days. Register skills with `update_state` only — do **not** Shell-overwrite `/home/box/agent-data/workflows/*/SKILL.md`.
+
 1. **Use native playbooks** under `/home/box/agent-data/biblemate-native-skills/<id>/SKILL.md` (installed from `skills/` in this repo).
 2. **Catalog loaders** under `/home/box/agent-data/workflows/<id>/SKILL.md` are thin entry points — they `Read` the full playbook and execute it. **Never** put full playbooks in `workflows/`.
 3. **Prefer native** playbooks — execute with Grok Bot tools yourself. Shell out to `grok`/`claude`/`agy` **only** via the [BibleMate Studies CLI](skills/biblemate-studies-cli/SKILL.md) fallback, or when the user explicitly asks for the CLI.
@@ -30,6 +32,7 @@ This repository is an AI-driven Bible study ecosystem for **Grok Bot** (native s
 |---------|---------|
 | `/bible John 3:16` | Exact verse retrieval (SQLite) |
 | `/devotion Rom 8` | Pastoral devotion + prayer |
+| `/promise-prayer` | First-person EN+粵語 promise prayer (self/family/church/world) |
 | `/sermon Matt 5` | Sermon outline + content |
 | `/biblemate …` | Orchestrated multi-step study |
 | `/Gen faith` | Book-scoped search (66 books) |

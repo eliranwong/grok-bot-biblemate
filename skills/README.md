@@ -1,6 +1,6 @@
 # Native Grok Bot BibleMate playbooks
 
-Total: 128
+Total: 129
 
 - [1 Chronicles](1Chr/SKILL.md) — `1Chr` (skill)
 - [1 Corinthians](1Cor/SKILL.md) — `1Cor` (skill)
@@ -103,6 +103,7 @@ Total: 128
 - [Philippians](Phil/SKILL.md) — `Phil` (skill)
 - [Philemon](Phlm/SKILL.md) — `Phlm` (skill)
 - [Prayer](prayer/SKILL.md) — `prayer` (skill)
+- [Promise Prayer](promise-prayer/SKILL.md) — `promise-prayer` (skill)
 - [Promises](promises/SKILL.md) — `promises` (skill)
 - [Proverbs](Prov/SKILL.md) — `Prov` (skill)
 - [Psalms](Ps/SKILL.md) — `Ps` (skill)
